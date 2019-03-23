@@ -7,14 +7,14 @@ function init() {
 }
 
 function getSearchResult() {
-	var arHints = [
-		"Title search", 
-		"JavaScript is great!", 
-		"Google Analytics", 
-		"Learn JavaScript", 
-		"Some text",
-		"Another text"
-	];
+	var records = {
+		"Title search": "Title search title search title search", 
+		"JavaScript is great!": "JavaScript is great! Really!", 
+		"Google Analytics": "You might not need Google Analytics. Really.", 
+		"Learn JavaScript": "It's cool, I must admit", 
+		"Some text": "Some text some text some text some text some text",
+		"Another text": "Another text another text another text another text"
+	}
 
 	var query = document.getElementById('search-query').value;
 
@@ -22,18 +22,24 @@ function getSearchResult() {
 	resultBlock.innerHTML = '';
 
 	if (query != '') {
-		var arResult = [];
+		var arResult = {};
 
-		for (var i = 0; i < arHints.length; i++) {
-			if (arHints[i].toLowerCase().indexOf(query.toLowerCase()) >= 0) {
-				arResult.push(arHints[i]);
+		for (var key in records) {
+			if (key.toLowerCase().indexOf(query.toLowerCase()) >= 0
+				|| records[key].toLowerCase().indexOf(query.toLowerCase()) >= 0) {
+				arResult[key] = records[key];
 			}
 		}
 
-		for (var i = 0; i < arResult.length; i++) {
+		for (var key in arResult) {
 			var newEl = document.createElement('li');
-			newEl.innerHTML = arResult[i];
+			var newUl = document.createElement('ul')
+			var newEl2 = document.createElement('li');
+			newEl.innerHTML = key;
 			resultBlock.appendChild(newEl);
+			newEl2.innerHTML = arResult[key];
+			newEl.appendChild(newUl);
+			newUl.appendChild(newEl2);
 		}
 
 		if (arResult.length == 0) {

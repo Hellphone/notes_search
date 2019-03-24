@@ -5,6 +5,12 @@ function init() {
 
 	var arRecords = getFileContents('records.json');
 
+/*	var arLi = document.querySelectorAll('#result li');
+	for (var i = 0; i < arLi.length; i++) {
+		arLi[i].onmouseenter = showHint;
+		arLi[i].onmouseleave = hideHint;
+	}*/
+
 	searchQueryInput.onkeyup = addOnKeyUpHandler(searchQueryInput, resultBlock, arRecords);
 	searchForm.onsubmit = submitForm;
 	searchQueryInput.focus();
@@ -20,11 +26,9 @@ function getFileContents(filename) {
         if (xhr.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
            if (xhr.status == 200) {
             	result = JSON.parse(xhr.responseText);
-           }
-           else if (xhr.status == 400) {
+           } else if (xhr.status == 400) {
             	console.error('There was an error 400');
-           }
-           else {
+           } else {
             	console.error('something else other than 200 was returned');
            }
         }
@@ -32,6 +36,25 @@ function getFileContents(filename) {
 
 	xhr.send();
 	return result;
+}
+
+function showHint(eventObj) {
+	var li = eventObj.target;
+	console.log(li.getAttribute('data-fulltext'));
+	if (li.getAttribute('data-fulltext') !== null) {
+		var hintBlock = document.createElement('ul');
+		var hint = document.createElement('li');
+		hint.innerHTML = li.getAttribute('data-fulltext');
+		li.appendChild(hintBlock);
+		hintBlock.appendChild(hint);
+	}
+}
+
+function hideHint(eventObj) {
+	var li = eventObj.target;
+	if (li.getAttribute('data-fulltext') !== null) {
+		li.removeChild(li.lastChild);
+	}
 }
 
 function addOnKeyUpHandler(elem, resultBlock) {
@@ -56,8 +79,7 @@ function getSearchResult(query) {
 				arResult[key] = records[key];
 			}
 		}
-	}
-	else {
+	}	else {
 		return false;
 	}
 
@@ -72,14 +94,16 @@ function showResult(source, target) {
 			var newEl = document.createElement('li');
 			var newUl = document.createElement('ul')
 			var newEl2 = document.createElement('li');
+			newEl.onmouseenter = showHint;
+			newEl.onmouseleave = hideHint;
 			newEl.innerHTML = key;
 			target.appendChild(newEl);
 			newEl2.innerHTML = source[key];
-			newEl.appendChild(newUl);
-			newUl.appendChild(newEl2);
+			newEl.setAttribute('data-fulltext', source[key]);
+			// newEl.appendChild(newUl);
+			// newUl.appendChild(newEl2);
 		}
 	}
-	
 }
 
 function submitForm(e, query) {

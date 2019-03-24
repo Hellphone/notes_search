@@ -1,21 +1,37 @@
-var records = {
-	"Title search": "Title search title search title search", 
-	"JavaScript is great!": "JavaScript is great! Really!", 
-	"Google Analytics": "You might not need Google Analytics. Really.", 
-	"Learn JavaScript": "It's cool, I must admit", 
-	"Some text": "Some text some text some text some text some text",
-	"Another text": "Another text another text another text another text"
-}
-
 function init() {
 	var searchForm = document.getElementById('search-form');
 	var searchQueryInput = document.getElementById('search-query');
 	var resultBlock = document.querySelector('#result ul');
 
-	searchQueryInput.onkeyup = addOnKeyUpHandler(searchQueryInput, resultBlock);
+	var arRecords = getFileContents('records.json');
+
+	searchQueryInput.onkeyup = addOnKeyUpHandler(searchQueryInput, resultBlock, arRecords);
 	searchForm.onsubmit = submitForm;
 	searchQueryInput.focus();
 	resultBlock.innerHTML = '';
+}
+
+function getFileContents(filename) {
+	var xhr = new XMLHttpRequest();
+	var result;
+	xhr.open('GET', filename, false);
+
+	xhr.onload = function() {
+        if (xhr.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
+           if (xhr.status == 200) {
+            	result = JSON.parse(xhr.responseText);
+           }
+           else if (xhr.status == 400) {
+            	console.error('There was an error 400');
+           }
+           else {
+            	console.error('something else other than 200 was returned');
+           }
+        }
+    };
+
+	xhr.send();
+	return result;
 }
 
 function addOnKeyUpHandler(elem, resultBlock) {
@@ -23,23 +39,26 @@ function addOnKeyUpHandler(elem, resultBlock) {
 		var query = elem.value;
 		var arResult = getSearchResult(query);
 		resultBlock.innerHTML = '';
-		showResult(arResult, resultBlock);
+		if (arResult !== false) {
+			showResult(arResult, resultBlock);
+		}
 	});
 }
 
 function getSearchResult(query) {
-	if (query != '') {
-		var arResult = {};
+	var arResult = {};
+	var records = getFileContents('records.json');
 
+	if (query != '') {
 		for (var key in records) {
 			if (key.toLowerCase().indexOf(query.toLowerCase()) >= 0
-			|| records[key].toLowerCase().indexOf(query.toLowerCase()) >= 0) {
+				|| records[key].toLowerCase().indexOf(query.toLowerCase()) >= 0) {
 				arResult[key] = records[key];
 			}
 		}
-
-	} else {
-		return {};
+	}
+	else {
+		return false;
 	}
 
 	return arResult;

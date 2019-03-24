@@ -5,12 +5,6 @@ function init() {
 
 	var arRecords = getFileContents('records.json');
 
-/*	var arLi = document.querySelectorAll('#result li');
-	for (var i = 0; i < arLi.length; i++) {
-		arLi[i].onmouseenter = showHint;
-		arLi[i].onmouseleave = hideHint;
-	}*/
-
 	searchQueryInput.onkeyup = addOnKeyUpHandler(searchQueryInput, resultBlock, arRecords);
 	searchForm.onsubmit = submitForm;
 	searchQueryInput.focus();
@@ -93,15 +87,11 @@ function showResult(source, target) {
 		for (var key in source) {
 			var newEl = document.createElement('li');
 			var newUl = document.createElement('ul')
-			var newEl2 = document.createElement('li');
 			newEl.onmouseenter = showHint;
 			newEl.onmouseleave = hideHint;
 			newEl.innerHTML = key;
 			target.appendChild(newEl);
-			newEl2.innerHTML = source[key];
 			newEl.setAttribute('data-fulltext', source[key]);
-			// newEl.appendChild(newUl);
-			// newUl.appendChild(newEl2);
 		}
 	}
 }

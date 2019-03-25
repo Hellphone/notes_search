@@ -3,7 +3,7 @@ function init() {
 	var searchQueryInput = document.getElementById('search-query');
 	var resultBlock = document.querySelector('#result ul');
 
-	var arRecords = getFileContents('records.json');
+	var arRecords = getFileContents('assets/getRecords.php');
 
 	searchQueryInput.onkeyup = addOnKeyUpHandler(searchQueryInput, resultBlock, arRecords);
 	searchForm.onsubmit = submitForm;
@@ -34,7 +34,6 @@ function getFileContents(filename) {
 
 function showHint(eventObj) {
 	var li = eventObj.target;
-	console.log(li.getAttribute('data-fulltext'));
 	if (li.getAttribute('data-fulltext') !== null) {
 		var hintBlock = document.createElement('ul');
 		var hint = document.createElement('li');
@@ -51,10 +50,10 @@ function hideHint(eventObj) {
 	}
 }
 
-function addOnKeyUpHandler(elem, resultBlock) {
+function addOnKeyUpHandler(elem, resultBlock, arRecords) {
 	elem.addEventListener('keyup', function(e) {
 		var query = elem.value;
-		var arResult = getSearchResult(query);
+		var arResult = getSearchResult(query, arRecords);
 		resultBlock.innerHTML = '';
 		if (arResult !== false) {
 			showResult(arResult, resultBlock);
@@ -62,15 +61,14 @@ function addOnKeyUpHandler(elem, resultBlock) {
 	});
 }
 
-function getSearchResult(query) {
+function getSearchResult(query, arRecords) {
 	var arResult = {};
-	var records = getFileContents('records.json');
 
 	if (query != '') {
-		for (var key in records) {
+		for (var key in arRecords) {
 			if (key.toLowerCase().indexOf(query.toLowerCase()) >= 0
-				|| records[key].toLowerCase().indexOf(query.toLowerCase()) >= 0) {
-				arResult[key] = records[key];
+				|| arRecords[key].toLowerCase().indexOf(query.toLowerCase()) >= 0) {
+				arResult[key] = arRecords[key];
 			}
 		}
 	}	else {
@@ -90,8 +88,8 @@ function showResult(source, target) {
 			newEl.onmouseenter = showHint;
 			newEl.onmouseleave = hideHint;
 			newEl.innerHTML = key;
-			target.appendChild(newEl);
 			newEl.setAttribute('data-fulltext', source[key]);
+			target.appendChild(newEl);
 		}
 	}
 }

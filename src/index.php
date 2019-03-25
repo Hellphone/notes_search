@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<title>Hints</title>
 </head>
 <body>
@@ -18,6 +18,6 @@
 	<div id="result">
 		<ul></ul>
 	</div>
-	<script src="script.js"></script>
+	<script src="js/script.js"></script>
 </body>
 </html>

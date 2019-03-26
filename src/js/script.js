@@ -17,7 +17,7 @@ function getFileContents(filename) {
 	xhr.open('GET', filename, false);
 
 	xhr.onload = function() {
-        if (xhr.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
+        if (xhr.readyState == XMLHttpRequest.DONE) {
            if (xhr.status == 200) {
             	result = JSON.parse(xhr.responseText);
            } else if (xhr.status == 400) {
